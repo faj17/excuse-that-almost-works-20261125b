@@ -29,6 +29,10 @@ def validate(line: str) -> str:
     Checks run in order of specificity: a blank line gets its own
     error instead of the length error, and control characters are
     rejected so the output is always a clean, printable single line.
+    Word count and single-line shape are enforced too: at most 20
+    words, no newline or carriage return anywhere, no tabs, and no
+    runs of consecutive whitespace — a hurried text is one plain line
+    with single spaces between words.
     """
     text = line.strip()
     if not text:
@@ -44,8 +48,12 @@ def validate(line: str) -> str:
         )
     if "\n" in text or "\r" in text:
         raise ValueError("line must be a single line")
-    if any(ord(ch) < 0x20 and ch not in "\t" for ch in text):
+    if "\t" in text:
+        raise ValueError("line must not contain tabs")
+    if any(ord(ch) < 0x20 or ord(ch) == 0x7F for ch in text):
         raise ValueError("line must not contain control characters")
+    if any(a == " " and b == " " for a, b in zip(text, text[1:])):
+        raise ValueError("line must not contain consecutive spaces")
     return text
 
 

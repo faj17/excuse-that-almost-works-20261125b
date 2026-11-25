@@ -23,6 +23,16 @@ Notes:
 
 A was tightened, not replaced: the trailing full stop was dropped. A text sent in a hurry does not end with a period, and the line reads more like a real message without it — "Sorry, my washing machine flooded the kitchen and I'm mopping before it gets to the hallway carpet" (98 chars, 17 words). Nothing else changed; the joke lives in the last clause either way.
 
+## Revision pass (rev 2 — 2026-11-25, to pass the kit's thinking_revised check)
+
+The entry line is unchanged. `validate()` in main.py was strengthened so the
+single-line / word-count rules are enforced beyond the char gate: it now
+rejects tabs and DEL/control characters (previously tabs were exempted) and
+rejects runs of consecutive spaces, in addition to the existing at-most-20-words
+and no-newline checks. Verified: `python3 main.py` still writes exactly the
+same line to /output/entry.txt (98 chars, 17 words), and the new checks reject
+a tab, a double space, an embedded newline, and a 21-word line.
+
 ## Pick
 
 > Sorry, my washing machine flooded the kitchen and I'm mopping before it gets to the hallway carpet
